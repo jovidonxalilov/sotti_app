@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "796842907557",
+    "firebase_url": "https://shipyon-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "shipyon",
+    "storage_bucket": "shipyon.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796842907557:android:f4ad416457483cd2a5ba4c",
+        "android_client_info": {
+          "package_name": "com.dastruchi.sotti"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAcpowvuhPk4ySya0biKMq15t5Y9X2t7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796842907557:android:7e4bf3096e3a338da5ba4c",
+        "android_client_info": {
+          "package_name": "com.dasturchi.anzirad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAcpowvuhPk4ySya0biKMq15t5Y9X2t7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796842907557:android:29685bc829da3088a5ba4c",
+        "android_client_info": {
+          "package_name": "com.example.sotti"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAcpowvuhPk4ySya0biKMq15t5Y9X2t7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
