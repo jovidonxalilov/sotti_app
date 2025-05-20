@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 class LocationProvider with ChangeNotifier {
-  Location _location = Location();
+  final Location _location = Location();
   double? lat;
   double? long;
   bool isWorking = false;
@@ -18,7 +18,7 @@ class LocationProvider with ChangeNotifier {
   void toggleWorking() {
     isWorking = !isWorking;
     notifyListeners();
-    _updateFirestore();
+    _updateRealtimeLocation();
   }
 
   Future<void> _initLocation() async {
@@ -31,38 +31,63 @@ class LocationProvider with ChangeNotifier {
     }
 
     _location.onLocationChanged.listen((loc) {
-      if (_shouldUpdate(loc.latitude!, loc.longitude!)) {
-        lat = loc.latitude;
-        long = loc.longitude;
+      if (loc.latitude == null || loc.longitude == null) return;
+
+      lat = loc.latitude;
+      long = loc.longitude;
+
+      _updateRealtimeLocation();
+
+      if (_shouldSaveToHistory(lat!, long!)) {
         _lastLat = lat;
         _lastLong = long;
-        _updateFirestore();
-        notifyListeners();
+        _saveToLocationHistory();
       }
+
+      notifyListeners();
     });
   }
 
-  bool _shouldUpdate(double newLat, double newLong) {
+  bool _shouldSaveToHistory(double newLat, double newLong) {
     if (_lastLat == null || _lastLong == null) return true;
     double distance = _calculateDistance(_lastLat!, _lastLong!, newLat, newLong);
-    return distance >= 30;
+    return distance >= 10;
   }
 
   double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     const double R = 6371e3;
     final dLat = _degToRad(lat2 - lat1);
     final dLon = _degToRad(lon2 - lon1);
-    final a = sin(dLat / 2) * sin(dLat / 2) + cos(_degToRad(lat1)) * cos(_degToRad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degToRad(lat1)) * cos(_degToRad(lat2)) *
+            sin(dLon / 2) * sin(dLon / 2);
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return R * c;
   }
 
   double _degToRad(double deg) => deg * pi / 180;
 
-  void _updateFirestore() {
+  void _updateRealtimeLocation() {
+    if (lat == null || long == null) return;
+
     FirebaseFirestore.instance.collection('location').doc('shipiyon').set({
       'lat': lat,
       'long': long,
+      'isWorking': isWorking,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  void _saveToLocationHistory() {
+    if (lat == null || long == null) return;
+    FirebaseFirestore.instance
+        .collection('location_history')
+        .doc('shipiyon')
+        .collection('positions')
+        .add({
+      'lat': lat,
+      'long': long,
+      'timestamp': FieldValue.serverTimestamp(),
       'isWorking': isWorking,
     });
   }
